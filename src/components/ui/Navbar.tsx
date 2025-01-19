@@ -7,7 +7,7 @@ const Navbar = () => {
   const location = useLocation();
 
   return (
-    <nav className="bg-white border-b">
+    <nav className="bg-emerald-950 border-b">
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
         <div className="flex h-16 justify-between items-center">
           <div className="flex items-center">
@@ -19,7 +19,7 @@ const Navbar = () => {
                   className="h-12 w-12 object-contain"
                 />
               </div>
-              <span className="text-2xl font-bold text-amber-900 font-poppins">
+              <span className="text-2xl font-bold text-orange-100 font-poppins">
                 TalkTrails
               </span>
             </Link>
@@ -29,10 +29,10 @@ const Navbar = () => {
             <Link
               to="/"
               className={cn(
-                "inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2",
+                "inline-flex items-center px-1 pt-1 text-sm font-medium",
                 location.pathname === "/"
-                  ? "border-primary text-primary"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? "border-primary text-lime-100 underline"
+                  : "border-transparent text-lime-100 hover:text-lime-400 border-amber-100"
               )}
             >
               My Journal
@@ -40,10 +40,10 @@ const Navbar = () => {
             <Link
               to="/main"
               className={cn(
-                "inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2",
+                "inline-flex items-center px-1 pt-1 text-sm font-medium",
                 location.pathname === "/main"
-                  ? "border-primary text-primary"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? "border-primary text-lime-100 underline"
+                  : "border-transparent text-lime-100 hover:text-lime-400 border-amber-100"
               )}
             >
               My Perspectives
