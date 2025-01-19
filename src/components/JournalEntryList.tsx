@@ -59,7 +59,7 @@ const JournalEntryList = ({
   };
 
   return (
-    <Card className="w-full max-w-[800px] bg-white p-6 space-y-6">
+    <Card className="w-full max-w-[800px] bg-green-50 p-6 space-y-6">
       <div className="space-y-4">
         <div className="flex justify-center w-full">
           <div className="w-full max-w-[700px]">
@@ -91,7 +91,9 @@ const JournalEntryList = ({
                     <p className="text-sm line-clamp-2">{entry.text}</p>
                   </div>
                   <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${emotionColors[entry.emotion]}`}
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      emotionColors[entry.emotion]
+                    }`}
                   >
                     {entry.emotion}
                   </span>

@@ -64,8 +64,8 @@ const VoiceRecorder = ({
   };
 
   return (
-    <Card className="p-8 bg-white flex flex-col items-center justify-center w-full max-w-md min-h-[300px]">
-      <h2 className="text-xl font-semibold text-slate-800 mb-8 text-center">
+    <Card className="p-8 bg-amber-50 flex flex-col items-center justify-center w-full max-w-md min-h-[300px]">
+      <h2 className="text-xl font-semibold text-red-800 mb-8 text-center">
         {dailyPrompt}
       </h2>
 
@@ -74,7 +74,11 @@ const VoiceRecorder = ({
           <Button
             variant="outline"
             size="lg"
-            className={`w-20 h-20 rounded-full ${isRecording ? "bg-red-500 hover:bg-red-600" : "bg-slate-100 hover:bg-slate-200"} transition-colors`}
+            className={`w-20 h-20 rounded-full ${
+              isRecording
+                ? "bg-red-600 hover:bg-red-700"
+                : "bg-slate-100 hover:bg-slate-200"
+            } transition-colors`}
             onClick={handleToggleRecording}
           >
             {isRecording ? (
@@ -86,7 +90,7 @@ const VoiceRecorder = ({
         </div>
       </AnimatePresence>
 
-      <p className="mt-6 text-sm text-slate-600">
+      <p className="mt-6 text-sm text-red-800">
         {isRecording
           ? "Recording... Click to finish"
           : "Click to start recording"}
