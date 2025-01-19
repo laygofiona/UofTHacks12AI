@@ -11,6 +11,15 @@ interface SpeechRecognitionResult {
   };
 }
 
+interface PostData {
+  entry: string;
+}
+
+interface ApiResponse {
+  id: number;
+}
+
+
 interface SpeechRecognitionEvent {
   results: {
     [key: number]: SpeechRecognitionResult;
@@ -77,6 +86,8 @@ const VoiceRecorder: React.FC = ({
     return () => clearInterval(interval);
   }, [isRecording]);
 
+  
+
   const startListening = () => {
     if (
       !("webkitSpeechRecognition" in window || "SpeechRecognition" in window)
@@ -122,7 +133,24 @@ const VoiceRecorder: React.FC = ({
     recognition.start();
   };
 
-  const addEntryToDatabase = (transcript: string) => {
+  const addEntryToDatabase = async (transcript: string) => {
+    try {
+      const res = await fetch('http://0.0.0.0:8000/entry', { 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"entry": transcript}),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json(); // Try to parse error response as JSON
+        throw new Error(`${res.status} ${res.statusText}: ${errorData?.message || "Server error"}`);
+      }
+
+    } catch (err: any) { // Type the error as any
+      setError(err.message);
+    } 
     
   }
 
