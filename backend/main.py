@@ -43,6 +43,7 @@ async def add_entry(request: Request):
             "ai_summary": insights["ai_summary"],
             "quick_takeaway": insights["quick_takeaway"],
             "alternative_scenarios": insights["alternative_scenarios"],
+            "overall_emotion": insights["overall_emotion"],
             "id": doc_ref.id,
             "created-at": firestore.SERVER_TIMESTAMP
         }

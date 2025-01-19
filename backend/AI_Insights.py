@@ -29,7 +29,7 @@ def generate_entry_ai_insights(entry):
         ai_summary = generate_ai_output_textual("Generate an emotional, reflective, and concise summary, in narrative form, (less than 75 words) of the choices the user has made based on the journal entry given", entry)
         quick_takewaway = generate_ai_output_textual("Generate a concise quick takeaway from a third person perspective of the user's choices made in the journal entry (less than 75 words). Write in second person and add some of your own valuable insights, as if you're a therapist or psychologist", entry)
         alternative_scenarios = generate_ai_output_textual("Generate an ordered list of five (always different) alternative choices the user could have made and the alternative scenarios within those choices that could have played out (less than 75 words for each scenario). Write in second person and just immediately start with 1. or the first scenario. Continue in order, always start every scenario by the number, and the phrase: \"Could have \"", entry)
-        
+        overall_emotion = generate_ai_output_textual("Out of the following emotions: happy, sad, neutral, angry, and excited, give me the name of the emotion that is most recognized in the journal entry given.", entry)
         nums = ["1", "2", "3", "4", "5"]
         res = []
         l = 0  # Initialize l outside the loop
@@ -45,7 +45,8 @@ def generate_entry_ai_insights(entry):
         return {
             "ai_summary": ai_summary,
             "quick_takeaway": quick_takewaway,
-            "alternative_scenarios": alternative_scenarios
+            "alternative_scenarios": alternative_scenarios,
+            "overall_emotion": overall_emotion
         
         }
     except Exception as e:
