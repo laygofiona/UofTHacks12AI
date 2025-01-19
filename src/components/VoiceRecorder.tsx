@@ -122,11 +122,17 @@ const VoiceRecorder: React.FC = ({
     recognition.start();
   };
 
+  const addEntryToDatabase = (transcript: string) => {
+    
+  }
+
   const stopListening = () => {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
       setIsRecording(false);
       onRecordingComplete(transcript);
+      // Make a fetch request to post entry to database
+
       navigate("/main");
     }
   };
