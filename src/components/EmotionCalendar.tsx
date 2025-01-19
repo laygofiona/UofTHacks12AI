@@ -17,7 +17,7 @@ interface EmotionEntry {
 }
 
 interface EmotionCalendarProps {
-  entries?: EmotionEntry[];
+  emotion_entries?: EmotionEntry[];
   onDateSelect?: (date: Date) => void;
 }
 
@@ -38,10 +38,10 @@ const defaultEntries: EmotionEntry[] = [
 ];
 
 const EmotionCalendar = ({
-  entries = defaultEntries,
+  emotion_entries,
   onDateSelect = () => {},
 }: EmotionCalendarProps) => {
-  const emotionsByDate = entries.reduce((acc, entry) => {
+  const emotionsByDate = emotion_entries.reduce((acc, entry) => {
     acc[entry.date.toDateString()] = entry.emotion;
     return acc;
   }, {} as Record<string, Emotion>);

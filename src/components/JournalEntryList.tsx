@@ -5,12 +5,18 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import EmotionCalendar from "./EmotionCalendar";
 import { CalendarIcon, Clock, MessageCircle } from "lucide-react";
+import { useEffect } from "react";
 
 interface JournalEntry {
   id: string;
   timestamp: Date;
-  text: string;
-  emotion: "happy" | "sad" | "neutral" | "angry" | "excited";
+  entry: string;
+  ai_summary: string;
+  quick_takeaway: string;
+  alternative_scenarios: string;
+  overall_emotion: "happy" | "sad" | "neutral" | "angry" | "excited";
+  word_count: number;
+  date: string;
 }
 
 interface JournalEntryListProps {
@@ -18,26 +24,6 @@ interface JournalEntryListProps {
   onEntrySelect?: (entry: JournalEntry) => void;
 }
 
-const defaultEntries: JournalEntry[] = [
-  {
-    id: "1",
-    timestamp: new Date(),
-    text: "Had a great meeting today with the team. Everyone was very enthusiastic about the new project.",
-    emotion: "happy",
-  },
-  {
-    id: "2",
-    timestamp: new Date(Date.now() - 86400000),
-    text: "Feeling a bit overwhelmed with all the deadlines coming up.",
-    emotion: "sad",
-  },
-  {
-    id: "3",
-    timestamp: new Date(Date.now() - 172800000),
-    text: "Just finished a major milestone! The client was very pleased with the results.",
-    emotion: "excited",
-  },
-];
 
 const emotionColors = {
   happy: "bg-yellow-100 text-yellow-800",
@@ -48,28 +34,28 @@ const emotionColors = {
 };
 
 const JournalEntryList = ({
-  entries = defaultEntries,
+  entries,
   onEntrySelect = () => {},
 }: JournalEntryListProps) => {
   const navigate = useNavigate();
 
   const handleEntryClick = (entry: JournalEntry) => {
     onEntrySelect(entry);
-    navigate(`/entry/${entry.id}`);
+    navigate(`/entry/${entry.id}`, { state: {id: entry.id}});
   };
 
   // Map entries to EmotionEntry format for EmotionCalendar
   const emotionEntries = entries.map((entry) => ({
     date: entry.timestamp,
-    emotion: entry.emotion,
+    emotion: entry.overall_emotion,
   }));
-
+  
   return (
     <Card className="w-full max-w-[800px] bg-green-50 p-6 space-y-6">
       <div className="space-y-4">
         <div className="flex justify-center w-full">
           <div className="w-full max-w-[700px]">
-            <EmotionCalendar entries={emotionEntries} />
+            <EmotionCalendar emotion_entries={emotionEntries} />
           </div>
         </div>
         <Separator />
@@ -94,19 +80,19 @@ const JournalEntryList = ({
                         })}
                       </span>
                     </div>
-                    <p className="text-sm line-clamp-2">{entry.text}</p>
+                    <p className="text-sm line-clamp-2">{entry.entry}</p>
                   </div>
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      emotionColors[entry.emotion]
+                      emotionColors[entry.overall_emotion]
                     }`}
                   >
-                    {entry.emotion}
+                    {entry.overall_emotion}
                   </span>
                 </div>
                 <div className="mt-2 flex items-center space-x-2 text-sm text-gray-500">
                   <MessageCircle size={16} />
-                  <span>{entry.text.split(" ").length} words</span>
+                  <span>{entry.word_count} words</span>
                 </div>
               </Card>
             ))}

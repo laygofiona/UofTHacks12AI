@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { useEffect, useState } from "react";
 
 interface JournalEntry {
   id: string;
@@ -54,6 +55,10 @@ const JournalEntryDetail = () => {
   // In a real app, fetch the entry and insights based on the ID
   const entry = defaultEntry;
   const insights = defaultInsights;
+
+  useEffect(() => {
+    // Call function to get entry with passed id
+  }, [])
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
