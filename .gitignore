@@ -27,3 +27,6 @@ dist-ssr
 
 **/tempobook/dynamic/
 **/tempobook/storyboards/
+
+.env
+*.env.* # Ignore variations like .env.local, .env.development, etc.
