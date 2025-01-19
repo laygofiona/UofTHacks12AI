@@ -12,7 +12,7 @@ const Home = ({ onRecordingComplete = () => {} }: HomeProps) => {
         <h1 className="text-3xl font-bold text-center text-yellow-900 mb-8">
           Daily Voice Journal
         </h1>
-        <VoiceRecorder onRecordingComplete={onRecordingComplete} />
+        <VoiceRecorder />
       </div>
     </div>
   );

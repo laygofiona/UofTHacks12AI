@@ -145,26 +145,24 @@ const VoiceRecorder: React.FC = ({
         {dailyPrompt}
       </h2>
 
-      <AnimatePresence>
-        <div className="relative">
-          <Button
-            variant="outline"
-            size="lg"
-            className={`w-20 h-20 rounded-full ${
-              isRecording
-                ? "bg-red-500 hover:bg-red-600"
-                : "bg-slate-100 hover:bg-slate-200"
-            } transition-colors`}
-            onClick={handleToggleRecording}
-          >
-            {isRecording ? (
-              <StopCircle className="h-10 w-10 text-white" />
-            ) : (
-              <Mic className="h-10 w-10 text-slate-600" />
-            )}
-          </Button>
-        </div>
-      </AnimatePresence>
+      <div className="relative">
+        <Button
+          variant="outline"
+          size="lg"
+          className={`w-20 h-20 rounded-full ${
+            isRecording
+              ? "bg-red-500 hover:bg-red-600"
+              : "bg-slate-100 hover:bg-slate-200"
+          } transition-colors`}
+          onClick={handleToggleRecording}
+        >
+          {isRecording ? (
+            <StopCircle className="h-10 w-10 text-white" />
+          ) : (
+            <Mic className="h-10 w-10 text-slate-600" />
+          )}
+        </Button>
+      </div>
 
       <p className="mt-6 text-sm text-red-800">
         {isRecording
