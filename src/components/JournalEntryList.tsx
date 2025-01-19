@@ -58,12 +58,18 @@ const JournalEntryList = ({
     navigate(`/entry/${entry.id}`);
   };
 
+  // Map entries to EmotionEntry format for EmotionCalendar
+  const emotionEntries = entries.map((entry) => ({
+    date: entry.timestamp,
+    emotion: entry.emotion,
+  }));
+
   return (
     <Card className="w-full max-w-[800px] bg-white p-6 space-y-6">
       <div className="space-y-4">
         <div className="flex justify-center w-full">
           <div className="w-full max-w-[700px]">
-            <EmotionCalendar />
+            <EmotionCalendar entries={emotionEntries} />
           </div>
         </div>
         <Separator />
@@ -91,7 +97,9 @@ const JournalEntryList = ({
                     <p className="text-sm line-clamp-2">{entry.text}</p>
                   </div>
                   <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${emotionColors[entry.emotion]}`}
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      emotionColors[entry.emotion]
+                    }`}
                   >
                     {entry.emotion}
                   </span>

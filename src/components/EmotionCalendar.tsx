@@ -41,13 +41,10 @@ const EmotionCalendar = ({
   entries = defaultEntries,
   onDateSelect = () => {},
 }: EmotionCalendarProps) => {
-  const emotionsByDate = entries.reduce(
-    (acc, entry) => {
-      acc[entry.date.toDateString()] = entry.emotion;
-      return acc;
-    },
-    {} as Record<string, Emotion>,
-  );
+  const emotionsByDate = entries.reduce((acc, entry) => {
+    acc[entry.date.toDateString()] = entry.emotion;
+    return acc;
+  }, {} as Record<string, Emotion>);
 
   return (
     <Card className="p-4 flex flex-col items-center">
@@ -67,7 +64,7 @@ const EmotionCalendar = ({
             emotion: "font-bold",
           }}
           components={{
-            Day: ({ date, ...props }) => {
+            Day: ({ date, className, ...props }: any) => {
               const emotion = emotionsByDate[date.toDateString()];
               return (
                 <Tooltip>
@@ -76,8 +73,8 @@ const EmotionCalendar = ({
                       {...props}
                       className={cn(
                         props.className,
-                        emotion && emotionColors[emotion],
-                        "w-16 h-16 rounded-full transition-colors hover:bg-opacity-90 flex items-center justify-center font-medium",
+                        "w-16 h-16 rounded-full transition-colors flex items-center justify-center font-medium",
+                        emotion ? emotionColors[emotion] : ""
                       )}
                     >
                       {date.getDate()}
