@@ -5,6 +5,7 @@ from AI_Insights import generate_entry_ai_insights, generate_ai_insights_day, ge
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
+import datetime
 
 cred = credentials.Certificate('./serviceAccount.json')
 
@@ -38,6 +39,10 @@ async def add_entry(request: Request):
         # Pass the entry to generate AI entry insights for that current day  
         insights = generate_entry_ai_insights(user_input["entry"]) 
         
+        words = user_input["entry"].split()
+        
+        word_count = len(words)
+        
         entry_doc = {
             "entry": user_input["entry"],
             "ai_summary": insights["ai_summary"],
@@ -45,7 +50,9 @@ async def add_entry(request: Request):
             "alternative_scenarios": insights["alternative_scenarios"],
             "overall_emotion": insights["overall_emotion"],
             "id": doc_ref.id,
-            "created-at": firestore.SERVER_TIMESTAMP
+            "created-at": firestore.SERVER_TIMESTAMP,
+            "word_count": word_count,
+            "date": datetime.date.today().strftime("%A, %d %B %Y")
         }
         
         doc_ref.set(entry_doc)
