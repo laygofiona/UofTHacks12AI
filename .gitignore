@@ -31,3 +31,5 @@ dist-ssr
 ./backend/.env
 *.env
 *.env.* # Ignore variations like .env.local, .env.development, etc.
+
+*/serviceAccount.json
