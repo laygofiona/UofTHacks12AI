@@ -1,13 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Mic, StopCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
+interface SpeechRecognitionResult {
+  isFinal: boolean;
+  [key: number]: {
+    transcript: string;
+  };
+}
+
+interface SpeechRecognitionEvent {
+  results: {
+    [key: number]: SpeechRecognitionResult;
+    length: number;
+  };
+}
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onstart: (() => void) | null;
+  onerror: ((event: Event) => void) | null;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onend: (() => void) | null;
+  start(): void;
+  stop(): void;
+}
+
 interface VoiceRecorderProps {
-  onRecordingComplete?: (audioBlob: Blob) => void;
-  isRecording?: boolean;
+  onRecordingComplete?: (transcript: string) => void;
   onRecordingStart?: () => void;
   onRecordingStop?: () => void;
 }
@@ -23,9 +47,8 @@ const dailyPrompts = [
   "What's something new you learned today?",
 ];
 
-const VoiceRecorder = ({
+const VoiceRecorder: React.FC = ({
   onRecordingComplete = () => {},
-  isRecording: externalIsRecording,
   onRecordingStart = () => {},
   onRecordingStop = () => {},
 }: VoiceRecorderProps) => {
@@ -33,6 +56,10 @@ const VoiceRecorder = ({
   const [isRecording, setIsRecording] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
   const [dailyPrompt, setDailyPrompt] = useState("");
+  const [transcript, setTranscript] = useState("");
+  const [error, setError] = useState("");
+
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * dailyPrompts.length);
@@ -50,16 +77,65 @@ const VoiceRecorder = ({
     return () => clearInterval(interval);
   }, [isRecording]);
 
-  const handleToggleRecording = () => {
-    if (isRecording) {
+  const startListening = () => {
+    if (
+      !("webkitSpeechRecognition" in window || "SpeechRecognition" in window)
+    ) {
+      setError("Speech Recognition API not supported in this browser.");
+      return;
+    }
+
+    const SpeechRecognition =
+      (window as any).webkitSpeechRecognition ||
+      (window as any).SpeechRecognition;
+    const recognition = new SpeechRecognition();
+
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
+
+    recognition.onstart = () => {
+      setIsRecording(true);
+      setError("");
+      onRecordingStart();
+    };
+
+    recognition.onerror = (event: any) => {
+      setError(`Error occurred: ${event.error}`);
+      setIsRecording(false);
+    };
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      let currentTranscript = "";
+      Array.from(event.results).forEach((result) => {
+        currentTranscript += result[0].transcript;
+      });
+      setTranscript(currentTranscript);
+    };
+
+    recognition.onend = () => {
       setIsRecording(false);
       onRecordingStop();
-      onRecordingComplete(new Blob());
-      console.log("Clicked");
-      navigate("/main"); // Navigate to main page after recording stops
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
+  };
+
+  const stopListening = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsRecording(false);
+      onRecordingComplete(transcript);
+      navigate("/main");
+    }
+  };
+
+  const handleToggleRecording = () => {
+    if (isRecording) {
+      stopListening();
     } else {
-      setIsRecording(true);
-      onRecordingStart();
+      startListening();
     }
   };
 
@@ -69,28 +145,41 @@ const VoiceRecorder = ({
         {dailyPrompt}
       </h2>
 
-      <AnimatePresence>
-        <div className="relative">
-          <Button
-            variant="outline"
-            size="lg"
-            className={`w-20 h-20 rounded-full ${isRecording ? "bg-red-500 hover:bg-red-600" : "bg-slate-100 hover:bg-slate-200"} transition-colors`}
-            onClick={handleToggleRecording}
-          >
-            {isRecording ? (
-              <StopCircle className="h-10 w-10 text-white" />
-            ) : (
-              <Mic className="h-10 w-10 text-slate-600" />
-            )}
-          </Button>
-        </div>
-      </AnimatePresence>
+      <div className="relative">
+        <Button
+          variant="outline"
+          size="lg"
+          className={`w-20 h-20 rounded-full ${
+            isRecording
+              ? "bg-red-500 hover:bg-red-600"
+              : "bg-slate-100 hover:bg-slate-200"
+          } transition-colors`}
+          onClick={handleToggleRecording}
+        >
+          {isRecording ? (
+            <StopCircle className="h-10 w-10 text-white" />
+          ) : (
+            <Mic className="h-10 w-10 text-slate-600" />
+          )}
+        </Button>
+      </div>
 
       <p className="mt-6 text-sm text-slate-600">
         {isRecording
           ? "Recording... Click to finish"
           : "Click to start recording"}
       </p>
+
+      <div className="mt-4 text-sm text-slate-800">
+        <strong>Transcript:</strong>
+        <p>{transcript || "Your transcript will appear here..."}</p>
+      </div>
+
+      {error && (
+        <div className="text-red-500 mt-4">
+          <strong>{error}</strong>
+        </div>
+      )}
     </Card>
   );
 };
